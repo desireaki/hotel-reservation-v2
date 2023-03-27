@@ -1,5 +1,9 @@
 server:
   port: 8081
+  error:
+    include-message: ALWAYS
+    include-binding-errors: ALWAYS
+    include-stacktrace: ON_PARAM
 
 spring:
   datasource:
@@ -18,3 +22,4 @@ spring:
 
   main:
     web-application-type: servlet
+

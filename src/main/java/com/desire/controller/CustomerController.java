@@ -9,6 +9,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("api/v1/customers")
+@Deprecated
 public class CustomerController {
     private final CustomerServiceImpl customerService;
 
@@ -19,7 +20,7 @@ public class CustomerController {
 
     @GetMapping(("{customerId}"))
     Customer getCustomerById(@PathVariable("customerId") Long id){
-        Customer customer = customerService.getCustomer(id);
+        Customer customer = customerService.getCustomerByKey(id);
         return customer;
     }
 

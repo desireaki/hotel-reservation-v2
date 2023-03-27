@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.regex.Pattern;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -19,47 +19,33 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void addCustomer(String email, String firstName, String lastName, String zip, String country) {
-        //TODO validate request fields
         Customer customer = new Customer();
-        if (!isEmailValid(email)) {
-            //TODO: implement a custom error message
-            throw new RuntimeException();
-        }
         customer.setEmail(email);
-
-        if (firstName == null || firstName.trim().length() <1) {
-            //TODO: implement a custom error message
-            throw new RuntimeException();
-        }
         customer.setFirstName(firstName);
-
-        if (lastName == null || lastName.trim().length() <1) {
-            //TODO: implement a custom error message
-            throw new RuntimeException();
-        }
         customer.setLastName(lastName);
-
-        if (zip == null || zip.trim().length() <1) {
-            //TODO: implement a custom error message
-            throw new RuntimeException();
-        }
         customer.setZipCode(zip);
-
-        if (country == null || country.trim().length() <1) {
-            //TODO: implement a custom error message
-            throw new RuntimeException();
-        }
         customer.setCountry(country);
         customerDao.save(customer);
     }
 
     @Override
-    public Customer getCustomer(Long id) {
-        Customer customer = customerDao.findById(id).get();
-        if (customer == null) {
+    public void addCustomer(Customer customer) {
+        customerDao.save(customer);
+    }
+
+    @Override
+    public Customer getCustomerByKey(Long id) {
+        Optional<Customer> customer = customerDao.findById(id);
+        if (customer.isEmpty()) {
             //TODO: implement a custom error message
-            throw new NullPointerException();
+            throw new IllegalStateException("customer with id " + id + " not found");
         }
+        return customer.get();
+    }
+
+    @Override
+    public Customer getCustomerByEmail(String email) {
+        Customer customer = customerDao.findByEmail(email);
         return customer;
     }
 
@@ -69,9 +55,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer updateCustomer(Long id,Customer customerRecord) {
+    public Customer updateCustomer(Long id, Customer customerRecord) {
 
-        Customer customer = getCustomer(id);
+        Customer customer = getCustomerByKey(id);
         customer.setZipCode(customerRecord.getZipCode());
         customer.setCountry(customerRecord.getCountry());
         customerDao.save(customer);
@@ -80,17 +66,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer removeCustomer(Long id) {
-        Customer customer = getCustomer(id);
+        Customer customer = getCustomerByKey(id);
         customerDao.deleteById(id);
         return customer;
     }
 
-    @Override
-    public boolean isEmailValid(String email) {
-        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-        return Pattern.compile(regexPattern)
-                .matcher(email)
-                .matches();
-    }
 }

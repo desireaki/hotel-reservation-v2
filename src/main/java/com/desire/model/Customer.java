@@ -1,10 +1,11 @@
 package com.desire.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Getter;
+import jakarta.validation.constraints.Email;
 import lombok.Setter;
 
-@Getter
 @Setter
 @Entity
 public class Customer {
@@ -24,7 +25,10 @@ public class Customer {
     private String lastName;
     private String zipCode;
     private String country;
+    @Email(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
     private String email;
+
 
 
     /**
@@ -47,15 +51,31 @@ public class Customer {
 
     }
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                ", country='" + country + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    @JsonIgnore
+    public Long getId() {
+        return id;
     }
+
+    @JsonProperty("firstname")
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @JsonProperty("lastname")
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
 }

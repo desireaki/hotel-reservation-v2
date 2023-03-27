@@ -3,7 +3,6 @@ package com.desire.service;
 import com.desire.model.Customer;
 import java.util.Collection;
 
-
 public interface CustomerService {
     /**
      * This method takes the customer info and create a new customer's account.
@@ -14,12 +13,24 @@ public interface CustomerService {
     void addCustomer(String email, String firstName, String lastName, String zip, String country);
 
     /**
-     * This method returns the Customer profile information using provided customer email
-     * @param id Customer's email
+     * This method takes the customer info and create a new customer's account.
+     * @param customer New customer
+     */
+    void addCustomer(Customer customer);
+
+    /**
+     * This method returns the Customer profile information using provided customer id
+     * @param id Customer's id
      * @return Customer profile info
      */
-    Customer getCustomer(Long id);
+    Customer getCustomerByKey(Long id);
 
+    /**
+     * This method returns the Customer profile information using provided customer email
+     * @param email Customer's email
+     * @return Customer profile info
+     */
+    Customer getCustomerByEmail(String email);
 
     /**
      *This method returns the list of all customers
@@ -41,11 +52,4 @@ public interface CustomerService {
      */
     Customer removeCustomer(Long id);
 
-    /**
-     * This method takes the customer's email and validate its format
-     * @param email Customer's email
-     * @return true or false
-     */
-
-    boolean isEmailValid(String email);
 }
