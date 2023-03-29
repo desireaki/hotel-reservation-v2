@@ -1,6 +1,7 @@
 package com.desire.service;
 
 import com.desire.dao.CustomerDao;
+import com.desire.exception.ApiRequestException;
 import com.desire.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,15 +39,15 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<Customer> customer = customerDao.findById(id);
         if (customer.isEmpty()) {
             //TODO: implement a custom error message
-            throw new IllegalStateException("customer with id " + id + " not found");
+            throw new ApiRequestException(
+                    "customer with id " + id + " not found");
         }
         return customer.get();
     }
 
     @Override
     public Customer getCustomerByEmail(String email) {
-        Customer customer = customerDao.findByEmail(email);
-        return customer;
+        return customerDao.findByEmail(email);
     }
 
     @Override
